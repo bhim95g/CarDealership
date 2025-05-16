@@ -1,7 +1,6 @@
 package com.pluralsight;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Dealership {
     private String name;
@@ -9,25 +8,23 @@ public class Dealership {
     private String phone;
     private ArrayList<Vehicle> inventory;
 
-    // Constructor to initialize the dealership
+    //Methods
     public Dealership(String name, String address, String phone) {
         this.name = name;
         this.address = address;
         this.phone = phone;
-        this.inventory = new ArrayList<>();
+        this.inventory = new ArrayList<>(); //Making inventory ArrayList
     }
-
-    // Add a vehicle to the inventory
     public void addVehicle(Vehicle vehicle) {
         inventory.add(vehicle);
     }
-
-    // Return all vehicles
-    public List<Vehicle> getAllVehicles() {
+    public void removeVehicle(Vehicle vehicle) {
+        inventory.remove(vehicle);
+    }
+    public List<Vehicle> getAllVehicle() {
         return inventory;
     }
-
-    // Example implementation: Search by price range
+    //Search Vehicles by price, makemodel, year, color, mileage, type
     public List<Vehicle> getVehiclesByPrice(double min, double max) {
         List<Vehicle> results = new ArrayList<>();
         for (Vehicle v : inventory) {
@@ -38,16 +35,14 @@ public class Dealership {
         return results;
     }
 
-    // You can similarly implement other search methods like this:
     public List<Vehicle> getVehiclesByMakeModel(String make, String model) {
-        List<Vehicle> results = new ArrayList<>();
+        List<Vehicle> result = new ArrayList<>();
         for (Vehicle v : inventory) {
-            if (v.getMake().equalsIgnoreCase(make) &&
-                    v.getModel().equalsIgnoreCase(model)) {
-                results.add(v);
+            if (v.getMake().equalsIgnoreCase(make) && v.getModel().equalsIgnoreCase(model)) {
+                result.add(v);
             }
         }
-        return results;
+        return result;
     }
 
     public List<Vehicle> getVehiclesByYear(int min, int max) {
@@ -83,22 +78,15 @@ public class Dealership {
     public List<Vehicle> getVehiclesByType(String vehicleType) {
         List<Vehicle> results = new ArrayList<>();
         for (Vehicle v : inventory) {
-            if (v.getModel().equalsIgnoreCase(vehicleType)) {
+            if (v.getVehicleType().equalsIgnoreCase(vehicleType)) {
                 results.add(v);
             }
         }
         return results;
     }
 
-    // Remove a vehicle from the inventory
-    public void removeVehicle(Vehicle vehicle) {
-        inventory.remove(vehicle);
+    public List<Vehicle> getAllVehicles() {
+        return inventory;
+
     }
 }
-
-
-
-
-
-
-

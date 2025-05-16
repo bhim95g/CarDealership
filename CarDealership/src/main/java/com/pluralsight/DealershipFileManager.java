@@ -1,65 +1,44 @@
 package com.pluralsight;
-import java.io.*;
-import java.nio.file.Path;
 
+import java.io.*;
+import java.util.*;
 
 public class DealershipFileManager {
-
-    private static final String FILE_PATH = "src/main/resources/inventory.csv";
-
     public Dealership getDealership() {
-
-        Dealership dealership = new Dealership("My Dealership", "123 Main St", "555-1234");
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
-
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-
-                String[] parts = line.split(",");
-
-                if (parts.length == 8) {
-
-                    int vin = Integer.parseInt(parts[0]);
-
-                    int year = Integer.parseInt(parts[1]);
-
-                    String make = parts[2];
-
-                    String model = parts[3];
-
-                    String vehicleType = parts[4];
-
-                    String color = parts[5];
-
-                    int odometer = Integer.parseInt(parts[6]);
-
-                    double price = Double.parseDouble(parts[7]);
-
-                    Vehicle vehicle = new Vehicle(vin, year, make, model, vehicleType, color, odometer, price);
-
-                    dealership.addVehicle(vehicle);
-
-                }
-
+        Dealership dealership = null;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("inventory.csv"));
+            String line = br.readLine();
+            if (line != null) {
+                String[] parts = line.split("\\|");
+                dealership = new Dealership(parts[0], parts[1], parts[2]);
             }
-
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("/|");
+                int vin = Integer.parseInt(parts[0]);
+                int year = Integer.parseInt(parts[1]);
+                String make = parts[2];
+                String model = parts[3];
+                String type = parts[4];
+                String color = parts[5];
+                int odometer = Integer.parseInt(parts[6]);
+                double price = Double.parseDouble(parts[7]);
+                dealership.addVehicle(new Vehicle(vin, year, make, model, type, color, odometer, price));
+            }
         } catch (IOException e) {
-
-            System.out.println("Error reading inventory file: " + e.getMessage());
-
+            System.out.println("Error loading dealership: " + e.getMessage());
         }
-
         return dealership;
-
     }
 
     public void saveDealership(Dealership dealership) {
-
-        // To be implemented
-
+        try (PrintWriter pw = new PrintWriter(new FileWriter("inventory.csv"))) {
+            for (Vehicle v : dealership.getAllVehicles()) {
+                pw.println(v.getVin() + "|" + v.getYear() + "|" + v.getMake() + "|" + v.getModel() + "|" +
+                        v.getVehicleType() + "|" + v.getColor() + "|" + v.getOdometer() + "|" + v.getPrice());
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving dealership: " + e.getMessage());
+        }
     }
-
-
 }
